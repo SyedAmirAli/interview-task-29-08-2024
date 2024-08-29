@@ -1,0 +1,369 @@
+
+
+        // return $request->all();
+
+        /* 
+                    {
+                "product_name": "Mango Juice",
+                "product_categories": "[{\"id\":7,\"name\":\"Clothings\",\"created_at\":\"2024-08-29T08:04:57.000000Z\",\"updated_at\":\"2024-08-29T08:04:57.000000Z\"},{\"id\":3,\"name\":\"Home & Kitchen\",\"created_at\":\"2024-08-29T07:17:10.000000Z\",\"updated_at\":\"2024-08-29T07:17:10.000000Z\"}]",
+                "product_image": {}
+            }
+        
+        */
+        
+<!-- <script>
+import { ref } from "vue";
+import axios from "@/utils/axios";
+import { notificationWrong, notification } from "@/utils/swal-tost";
+
+export default {
+    name: "Product",
+
+    data() {
+        return {
+            isEdit: ref({ status: false }),
+            formData: ref({
+                product_name: "",
+                product_image: null,
+                product_category: 1,
+            }),
+            categories: ref([]),
+            selectedCategories: ref([]),
+            products: ref([]),
+        };
+    },
+
+    async created() {
+        await this.getCategories();
+    },
+
+    methods: {
+        // Get all categories from API request
+        async getCategories() {
+            try {
+                const result = await axios.get("/category");
+
+                if (result.data?.status === "success") {
+                    this.categories.value = result.data.data;
+                } else {
+                    notificationWrong();
+                }
+            } catch (error) {
+                notification("Failed to get categories!", "error");
+            }
+        },
+
+        productImageHandler(event) {
+            this.formData.value.product_image = event.target.files[0];
+        },
+
+        previewImage(obj) {
+            if (obj && Object.isExtensible(obj)) {
+                return URL.createObjectURL(obj);
+            }
+            return null;
+        },
+
+        selectCategoryHandler(event) {
+            const category = JSON.parse(event.target.value);
+            const index = this.selectedCategories.value.findIndex(
+                (cat) => cat.id === category.id
+            );
+            if (index !== -1) {
+                this.selectedCategories.value.splice(index, 1);
+            } else {
+                this.selectedCategories.value.unshift(category);
+            }
+        },
+
+        async cancelSelectedCategory(category) {
+            const index = this.selectedCategories.value.findIndex(
+                (cat) => cat.id === category.id
+            );
+            if (index !== -1) this.selectedCategories.value.splice(index, 1);
+        },
+
+        async updateProduct() {
+            // Implement your update logic here
+        },
+
+        async addProduct() {
+            try {
+                const formData = new FormData();
+                formData.append("product_name", this.formData.product_name);
+                formData.append("product_image", this.formData.product_image);
+                formData.append(
+                    "product_categories",
+                    JSON.stringify(this.$data.selectedCategories.value)
+                );
+
+                const create = await axios.post("/product/store", formData);
+                console.log("Product Create", create.data);
+
+                if (create.data?.status === "success") {
+                    this.products.value.unshift(create.data.data);
+
+                    this.clearIsEdit();
+                    notification(create.data?.message);
+                } else {
+                    notificationWrong();
+                }
+            } catch (error) {
+                if (typeof error?.response?.data?.message === "string") {
+                    notification(error.response.data?.message, "error");
+                } else {
+                    notificationWrong();
+                }
+
+                console.log(error);
+            }
+        },
+
+        async formHandler(event) {
+            event.preventDefault();
+            await this.addProduct();
+            // console.log(10000);
+
+            /* if (this.isEdit.value.status) {
+                await this.updateProduct();
+            } else {
+                await this.addProduct();
+            } */
+        },
+
+        async cancelEdit() {
+            // Implement your cancel edit logic here
+        },
+    },
+};
+</script> -->
+
+        // $product->categories()->attach($product->id, array_column($productCategories, 'id'));
+                // if ($request->input('product_categories')) $productCategories = json_decode($request->input('product_categories'), true);
+
+        // if (Category::whereNot('id', $id)->where('name', $name)->exists()) {
+        //     return response()->json([
+        //         'status' => 'error',
+        //         'message' => 'The category name has already been taken!'
+        //     ], 400);
+        // }
+
+        // async formHandler(event) {
+        //     if (this.isEdit.status) {
+        //         await this.updateProduct();
+        //     } else await this.addProduct();
+        // },
+        // formData.append(
+        //     "product_categories",
+        //     JSON.stringify(this.selectedCategories)
+        // );
+        // this.products.unshift(update.data.data);
+        // this.categories.splice(index, 1, update.data?.data);
+
+    // public function deleteImage()
+    // {
+    //     if (file_exists($this->image)) {
+    //         unlink($this->image);
+    //     }
+    // }
+    // protected static function booted()
+    // {
+    //     static::deleting(function ($category) {
+    //         foreach ($category->products() as $product) {
+    //             $product->deleteImage();
+    //             $product->delete();
+    //         }
+    //     });
+    // }
+<!-- <script>
+import { reactive, ref, watch } from "vue";
+
+export default {
+    data() {
+        const toast = ref({
+            status: false,
+            type: "error",
+            text: "Server Error!",
+        });
+
+        // Function to reset the status after 5 seconds
+        function resetToastStatus() {
+            setTimeout(() => {
+                toast.value.status = false;
+            }, 5000); // 5000 milliseconds = 5 seconds
+        }
+
+        function closeToast() {
+            toast.value.status = false;
+        }
+
+        // Call the function to reset the status
+        // resetToastStatus();
+        watch(
+            () => toast.value.status,
+            (generalsInformation) => {
+                if (generalsInformation) {
+                    resetToastStatus();
+                }
+            }
+        );
+
+        return { toast, closeToast };
+    },
+};
+</script> -->
+    <!-- <div
+        v-if="toast.status"
+        class="w-full fixed top-0 left-0 flex items-end justify-end z-20 pr-4 pt-4"
+    >
+        <div
+            class="p-6 flex items-center justify-center gap-3 bg-white shadow-md rounded-lg border border-solid border-slate-300"
+        >
+            <p
+                class="text-nowrap text-lg font-medium break-all"
+                :class="{
+                    'text-red-500': toast.type === 'error',
+                    'text-yellow-500': toast.type === 'warning',
+                    'text-green-500': toast.type === 'success',
+                }"
+            >
+                @{{ toast.text || "Server Error!" }}
+            </p>
+            <button
+                class="font-mono font-bold py-1 px-2.5 bg-red-400 rounded-full text-slate-100 duration-300 hover:bg-red-600"
+                v-on:click="closeToast"
+            >
+                X
+            </button>
+        </div>
+    </div> -->
+
+    
+        <!-- <div
+            class="w-full min-h-screen grid place-items-center py-10"
+        >
+            <div class="max-w-3xl bg-white mx-auto p-5 shadow-xl rounded-lg">
+                <p class="font-bold mb-5 text-xl">
+                    "প্রোডাক্ট ম্যানেজমেন্ট সিস্টেম" Laravel, MySQL, JavaScript,
+                    Tailwind CSS, এবং Vue.js ব্যবহার করে তৈরি করতে হবে।
+                </p>
+
+                <p class="font-semibold mb-5 text-xl">টাস্কসমূহ:</p>
+                <p class="font-semibold text-lg">
+                    প্রোডাক্ট ও ক্যাটেগরি রিলেশন তৈরি করতে হবে (Many to Many):
+                </p>
+                <div class="ml-5 mt-3">
+                    <p class="font-normal text-sm">
+                        ১। একটি প্রোডাক্টের একাধিক ক্যাটেগরি থাকতে পারে এবং একটি
+                        ক্যাটেগরির একাধিক প্রোডাক্ট থাকতে পারে।
+                    </p>
+                    <p class="font-normal text-sm">
+                        ১। অবশ্যই প্রোডাক্ট এড করার সময় টাইটেল, ইমেজ, ক্যাটাগরি
+                        ভেলিডেশন করতে হবে।
+                    </p>
+                    <p class="font-normal text-sm">
+                        ২। প্রোডাক্ট তৈরি করার সময় Multiple ক্যাটাগরি Select করার
+                        Option থাকবে।
+                    </p>
+                    <p class="font-normal text-sm">
+                        ৩। ক্যাটাগরি ডিলেট করতে হবে, ক্যাটাগরির সঙ্গে Related সমস্ত
+                        প্রোডাক্ট ডিলেট হয়ে যাবে ।
+                    </p>
+                </div>
+                <p class="font-semibold text-lg mt-5">
+                    প্রোডাক্ট ও ফিচার রিলেশন তৈরি করতে হবে (Has Many):
+                </p>
+                <div class="ml-5 mt-3">
+                    <p class="font-normal text-sm">
+                        ১। একটি প্রোডাক্টের একাধিক ফিচার থাকতে পারে।
+                    </p>
+                    <p class="font-normal text-sm">
+                        ২। প্রোডাক্ট তৈরি করার সময় ফিচার গুল Add More করার Option
+                        থাকবে।
+                    </p>
+                    <p class="font-normal text-sm">
+                        ৩। প্রোডাক্ট ডিলেট করতে হবে, প্রোডাক্ট ডিলেট করলে প্রোডাক্ট
+                        Related সমস্ত ফিচার গুলা ডিলেট হয়ে যাবে ।
+                    </p>
+                </div>
+                <p class="font-semibold text-lg mt-5">
+                    প্রোডাক্ট আপলোড ফর্ম ডিজাইন করতে হবে:
+                </p>
+                <div class="ml-5 mt-3">
+                    <p class="font-normal text-sm">
+                        ১। Tailwind CSS ব্যবহার করে একটি প্রোডাক্ট আপলোড ফর্ম তৈরি
+                        করতে হবে।
+                    </p>
+                    <p class="font-normal text-sm">
+                        ২। যেখানে একাধিক ক্যাটাগরি একসাথে সিলেক্ট করা যাবে।
+                    </p>
+                    <p class="font-normal text-sm">
+                        ৩। একটি "Add More" বাটন থাকবে যার মাধ্যমে একাধিক ফিচার যোগ
+                        করা যাবে। Add More করলে নতুন করে একটা Input Field যোগ হবে
+                    </p>
+                    <p class="font-normal text-sm">
+                        ৪। প্রোডাক্টের টাইটেল এবং ইমেজ দেওয়া যাবে এমন ফিল্ড থাকবে
+                        ইমেজ প্রিভিউ সহ ।
+                    </p>
+                </div>
+                <p class="font-semibold text-lg mt-5">
+                    প্রোডাক্ট প্রদর্শন করতে হবে।:
+                </p>
+                <div class="ml-5 mt-3">
+                    <p class="font-normal text-sm">
+                        ১। প্রোডাক্টগুলো ক্যাটেগরি এবং ফিচারসহ একটি ক্রিয়েটিভ
+                        Tailwind UI ডিজাইনে প্রোডাক্টের ডিটেলস দেখাতে হবে।
+                    </p>
+                </div>
+                <p class="font-semibold text-lg mt-5">এডিট ফিচার তৈরি করতে হবে:</p>
+                <div class="ml-5 mt-3">
+                    <p class="font-normal text-sm">
+                        ১। শুধুমাত্র প্রোডাক্টের টাইটেল এবং ইমেজ এডিট করা যাবে এমন
+                        একটি এডিট ফিচার তৈরি করতে হবে।
+                    </p>
+                </div>
+
+                <button
+                    class="text-lg font-bold text-red-500 px-3 py-1 border border-solid border-slate-300 rounded-lg uppercase m-4"
+                    @click="goToCategory"
+                >
+                    category
+                </button>
+            </div>
+        </div> -->
+        
+        // get all categories from api request
+        // async getCategories() {
+        //     try {
+        //         const result = await axios.get("/category");
+
+        //         if (result.data?.status === "success") {
+        //             this.categories = result.data.data;
+        //         } else notificationWrong();
+        //     } catch (error) {
+        //         // console.log(error);
+        //         notification("Failed to get categories!", "error");
+        //     }
+        // },
+
+<!-- 
+
+
+            { id: 1, name: "Electronics" },
+            { id: 2, name: "Clothing" },
+            { id: 3, name: "Home & Kitchen" },
+            { id: 4, name: "Beauty & Personal Care" },
+            { id: 5, name: "Books" },
+            { id: 9, name: "Health & Wellness" },
+            { id: 7, name: "Automotive" },
+            { id: 6, name: "Sports & Outdoors" },
+            { id: 8, name: "Toys & Games" },
+            { id: 10, name: "Office Supplies" },
+            { id: 13, name: "Tools & Home Improvement" },
+            { id: 11, name: "Pet Supplies" },
+            { id: 12, name: "Jewelry" },
+            { id: 14, name: "Grocery & Gourmet Food" },
+            { id: 15, name: "Baby Products" },
+             
+-->
+
