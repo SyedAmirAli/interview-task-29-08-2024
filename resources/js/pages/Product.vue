@@ -87,6 +87,74 @@
                         <!-- </select> -->
                     </div>
                 </div>
+
+                <!-- Add Product Features -->
+                <div class="w-full">
+                    <div class="w-full flex justify-between items-center gap-4">
+                        <div
+                            class="flex flex-col gap-1 w-full relative border border-primary-main/20 rounded-sm bg-white"
+                        >
+                            <label
+                                :for="features[0].name"
+                                class="font-medium uppercase text-slate-500 absolute left-3 -top-3 text-sm bg-white px-1 border border-primary-main/20 rounded-sm"
+                                >Add Features</label
+                            >
+                            <!-- v-model="formData.product_name" -->
+                            <input
+                                type="text"
+                                placeholder="e.g Mackbook pro"
+                                name="feature_1"
+                                v-model="features[0].description"
+                                class="border-none outline-none placeholder:text-slate-400 placeholder:font-normal font-medium w-full bg-white rounded-sm block pt-4 focus:outline-none focus:border-none"
+                            />
+                        </div>
+                        <button
+                            @click="addFeatureMoreHandler"
+                            type="button"
+                            class="text-nowrap bg-green-500/80 hover:bg-green-500 px-5 hover:tracking-[0.1px] duration-300 py-3 text-md uppercase text-slate-100 font-medium rounded-md"
+                        >
+                            add more
+                        </button>
+                    </div>
+
+                    <!-- More features options -->
+                    <div
+                        class="w-full"
+                        v-for="(feature, index) in features"
+                        :key="index"
+                    >
+                        <div
+                            class="w-full flex justify-between items-center gap-4 mt-3"
+                            v-if="index !== 0"
+                        >
+                            <div
+                                class="flex flex-col gap-1 w-full relative border border-primary-main/20 rounded-sm bg-white"
+                            >
+                                <label
+                                    :for="feature.name"
+                                    class="font-medium uppercase text-slate-500 absolute left-3 -top-3 text-sm bg-white px-1 border border-primary-main/20 rounded-sm"
+                                    >Add Features {{ feature.id }}</label
+                                >
+                                <!-- v-model="formData.product_name" -->
+                                <input
+                                    name="{{ feature.name }}"
+                                    v-model="feature.description"
+                                    type="text"
+                                    placeholder="e.g Mackbook pro"
+                                    class="border-none outline-none placeholder:text-slate-400 placeholder:font-normal font-medium w-full bg-white rounded-sm block pt-4 focus:outline-none focus:border-none"
+                                />
+                            </div>
+                            <button
+                                @click="cancelMoreFeature(feature.id)"
+                                type="button"
+                                class="text-nowrap bg-red-500/80 hover:bg-red-500 px-5 hover:tracking-[0.1px] duration-300 py-3 text-md uppercase text-slate-100 font-medium rounded-md"
+                            >
+                                cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <div
                     class="flex flex-col gap-1 w-full relative border border-primary-main/20 rounded-sm bg-white"
                 >
@@ -120,23 +188,9 @@
                         </button>
                     </div>
                 </div>
-                <div v-if="isEdit.status" class="flex gap-3">
-                    <button
-                        type="submit"
-                        class="text-nowrap bg-cyan-500/80 hover:bg-cyan-500 px-5 hover:tracking-[0.1px] duration-300 py-3 text-md uppercase text-slate-100 font-medium rounded-md"
-                    >
-                        edit Product
-                    </button>
-                    <button
-                        type="button"
-                        @click="cancelEdit"
-                        class="text-nowrap bg-red-500/80 hover:bg-red-500 px-5 hover:tracking-[0.1px] duration-300 py-3 text-md uppercase text-slate-100 font-medium rounded-md"
-                    >
-                        cancel
-                    </button>
-                </div>
 
-                <div v-else class="w-full flex items-end justify-end">
+                <!-- Submit buttons -->
+                <div class="w-full flex items-end justify-end">
                     <button
                         type="submit"
                         class="text-nowrap bg-primary-main/80 hover:bg-primary-main px-5 hover:tracking-[0.1px] duration-300 py-3 text-md uppercase text-slate-100 font-medium rounded-md"
@@ -409,6 +463,8 @@ export default {
             feature_description: "",
         });
 
+        const features = ref([{ id: 1, name: "feature_1", description: "" }]);
+
         return {
             isEdit,
             formData,
@@ -416,6 +472,7 @@ export default {
             selectedCategories,
             products,
             productFeature,
+            features,
         };
     },
 
@@ -575,6 +632,10 @@ export default {
                     "product_categories",
                     JSON.stringify(this.selectedCategories)
                 );
+                formData.append(
+                    "product_features",
+                    JSON.stringify(this.features)
+                );
 
                 const create = await axios.post("/product/store", formData);
                 console.log("Product Create", create.data);
@@ -587,6 +648,9 @@ export default {
                     this.formData.product_category = "";
                     this.formData.product_name = "";
                     this.formData.product_image = null;
+                    this.features = [
+                        { id: 1, name: "feature_1", description: "" },
+                    ];
                     notification(create.data?.message);
                 } else {
                     notificationWrong();
@@ -675,6 +739,25 @@ export default {
                 axiosCatchErrorNotify(error);
                 // console.log(error);
             }
+        },
+
+        addFeatureMoreHandler() {
+            const nextId =
+                this.features.reduce((acc, curr) => Math.max(acc, curr.id), 0) +
+                1;
+            this.features.push({
+                id: nextId,
+                name: `features_${nextId}`,
+                description: "",
+            });
+            // console.log({ nextId, features: this.features });
+        },
+
+        cancelMoreFeature(featureId) {
+            const index = this.features.findIndex(
+                (feature) => feature.id === featureId
+            );
+            if (index !== -1) this.features.splice(index, 1);
         },
     },
 };

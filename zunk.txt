@@ -367,3 +367,19 @@ export default {
              
 -->
 
+                <!-- <div v-if="isEdit.status" class="flex gap-3">
+                    <button
+                        type="submit"
+                        class="text-nowrap bg-cyan-500/80 hover:bg-cyan-500 px-5 hover:tracking-[0.1px] duration-300 py-3 text-md uppercase text-slate-100 font-medium rounded-md"
+                    >
+                        edit Product
+                    </button>
+                    <button
+                        type="button"
+                        @click="cancelEdit"
+                        class="text-nowrap bg-red-500/80 hover:bg-red-500 px-5 hover:tracking-[0.1px] duration-300 py-3 text-md uppercase text-slate-100 font-medium rounded-md"
+                    >
+                        cancel
+                    </button>
+                </div> -->
+

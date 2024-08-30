@@ -30,7 +30,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-
+        // return $request->all();
         $request->validate(['product_name' => 'required', 'product_image' => 'required|image|max:5000',]);
 
         $productCategories = [];
@@ -38,17 +38,29 @@ class ProductController extends Controller
             $productCategories = json_decode($request->input('product_categories'), true);
         }
 
+        $productFeatures = [];
+        if ($request->input('product_features')) {
+            $productFeatures = json_decode($request->input('product_features'), true);
+        }
+
         $name = $request->input('product_name');
         $image = Resources::saveFile($request, 'product_image');
 
         $product = Product::create(compact('name', 'image'));
 
-        if (!empty($productCategories)) {
-            $categoryIds = array_column($productCategories, 'id');
-            $product->categories()->attach($categoryIds);
-        }
-
         if ($product) {
+            if (!empty($productCategories)) {
+                $categoryIds = array_column($productCategories, 'id');
+                $product->categories()->attach($categoryIds);
+            }
+
+            // create features
+            if (!empty($productFeatures)) {
+                foreach ($productFeatures as $feature) {
+                    Feature::create(['product_id' => $product->id, 'description' => $feature['description']]);
+                }
+            }
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'New product added successfully!',
